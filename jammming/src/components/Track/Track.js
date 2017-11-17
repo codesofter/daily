@@ -7,42 +7,34 @@ class Track extends React.Component {
 
 		this.addTrack = this.addTrack.bind(this);
 		this.removeTrack = this.removeTrack.bind(this);
-		this.state = {
-			isRemoval: false
-		}
 	}
 
 	/*
 		Create a method called renderAction that displays a - anchor tag if the isRemoval property is true, and a + anchor tag if the isRemoval property is false. Set the class name to Track-action.
 	*/
 	renderAction () {
-		return this.state.isRemoval ? '-' : '+';
+		return this.props.isRemoval ?
+			<a className="Track-action" onClick={this.removeTrack}>-</a>
+			:
+			<a className="Track-action" onClick={this.addTrack}>+</a>;
 	}
 
 	addTrack () {
-		this.setState = {
-			isRemoval: !this.state.isRemoval
-		};
-
-		return this.props.onAdd(this.props.id);
+		return this.props.onAdd(this.props.track);
 	}
 
 	removeTrack() {
-		this.setState = {
-			isRemoval: !this.state.isRemoval
-		};
-
-		return this.props.onRemove(this.props.id);
+		return this.props.onRemove(this.props.track);
 	}
 
 	render () {
 		return (
 			<div className="Track">
 			  <div className="Track-information">
-			    <h3>{ this.props.name }</h3>
-			    <p>{ this.props.artist } | { this.props.album }</p>
+			    <h3>{ this.props.track.name }</h3>
+			    <p>{ this.props.track.artist } | { this.props.track.album }</p>
 			  </div>
-			  <a className="Track-action" onClick={this.state.isRemoval ? this.removeTrack : this.addTrack }>{ this.renderAction }</a>
+			  { this.renderAction() }
 			</div>
 		);
 	}

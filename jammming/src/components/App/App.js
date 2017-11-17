@@ -58,7 +58,7 @@ class App extends Component {
   }
 
   addTrack (track) {
-    if (!this.state.playlistTracks.some(playlistTrack => playlistTrack.id === track.id)) {
+    if (!this.findTrack(track)) {
       // push track onto playlistTracks (ES6)
       // see https://stackoverflow.com/questions/37435334/correct-way-to-push-into-state-array
       this.setState({ playlistTracks: [...this.state.playlistTracks, track] });
@@ -77,6 +77,10 @@ class App extends Component {
     });
   }
 
+  findTrack (track) {
+    return this.state.playlistTracks.some(playlistTrack => playlistTrack.id === track.id);
+  }
+
   savePlaylist () {
     /*
       Generates an array of uri values called trackURIs from the playlistTracks property.
@@ -87,12 +91,13 @@ class App extends Component {
   }
 
   search (term) {
-    const searchTerm = encodeURIComponent(term);
-    Spotify.search(searchTerm)
+    Spotify.search(term)
       .then(tracks => {
-        this.setState({
-          searchResults: tracks
-        });
+        if (tracks && tracks.length > 0) {
+          this.setState({
+            searchResults: tracks
+          });
+        }
       });
   }
 
@@ -103,8 +108,15 @@ class App extends Component {
         <div className="App">
           <SearchBar onSearch={this.search} />
           <div className="App-playlist">
-            <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack} onRemove={this.removeTrack} />
-            <Playlist onNameChange={this.updatePlaylistName} onSave={this.savePlaylist} name={this.state.playlistName} tracks={this.state.playlistTracks} />
+            <SearchResults
+              searchResults={this.state.searchResults}
+              onAdd={this.addTrack} />
+            <Playlist
+              name={this.state.playlistName}
+              onNameChange={this.updatePlaylistName}
+              onSave={this.savePlaylist}
+              onRemove={this.removeTrack}
+              tracks={this.state.playlistTracks} />
           </div>
         </div>
       </div>
