@@ -82,23 +82,29 @@ class App extends Component {
   }
 
   savePlaylist () {
-    /*
-      Generates an array of uri values called trackURIs from the playlistTracks property.
-      In a later step, you will pass the trackURIs array and playlistName to a method that will save the user's playlist to their account.
-    */
-    let trackURIs = [];
+    if (this.state.playlistName.length > 0) {
+      /*
+        Generates an array of uri values called trackURIs from the playlistTracks property.
+        In a later step, you will pass the trackURIs array and playlistName to a method that will save the user's playlist to their account.
+      */
+      let trackURIs = this.state.playlistTracks.map(track => track.uri);
 
+      Spotify.savePlaylist(this.state.playlistName, trackURIs)
+        .then(snapshot => {
+          this.setState({
+            playlistName: 'New Playlist',
+            searchResults: []
+          });
+        });
+    }
   }
 
   search (term) {
-    console.log("term:", term);
     Spotify.search(term)
       .then(tracks => {
-        if (tracks && tracks.length > 0) {
-          this.setState({
-            searchResults: tracks
-          });
-        }
+        this.setState({
+          searchResults: tracks
+        });
       });
   }
 
