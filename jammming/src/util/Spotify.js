@@ -6,7 +6,8 @@ let user_id = '';
 let playlist_id = '';
 
 const corsAnywhere = '';
-const redirectURI = 'http://localhost:3000/';
+// const redirectURI = 'http://localhost:3000/';
+const redirectURI = 'https://soft-jammming.surge.sh';
 
 // Spotify API
 const scopes = `playlist-modify-private`;
@@ -71,7 +72,6 @@ const Spotify = {
   },
   getUserInformation () {
     const headers = {Authorization: `Bearer ${this.getAccessToken()}`};
-    const userId = '';
 
     return fetch(`${corsAnywhere}${v1_get_user}`, {headers: headers})
       .then(response => {
