@@ -91,6 +91,7 @@ class App extends Component {
   }
 
   search (term) {
+    console.log("term:", term);
     Spotify.search(term)
       .then(tracks => {
         if (tracks && tracks.length > 0) {

@@ -6,6 +6,7 @@ const redirectURI = 'http://localhost:3000/';
 // Spotify API
 const v1_authorize = 'https://accounts.spotify.com/authorize';
 const v1_search = 'https://api.spotify.com/v1/search';
+const limit = 10;
 
 let accessToken = null;
 let expiration = 35000;
@@ -30,7 +31,7 @@ const Spotify = {
   search (term) {
     const headers = {Authorization: `Bearer ${this.getAccessToken()}`};
 
-    return fetch(`${corsAnywhere}${v1_search}?type=track&q=${term}`, {headers: headers})
+    return fetch(`${corsAnywhere}${v1_search}?type=artist,album,track&q=${term}&limit=${limit}`, {headers: headers})
       .then(response => {
         console.log(response);
         if (!response.ok) {
@@ -54,8 +55,6 @@ const Spotify = {
       })).catch(error => console.log(error.message));
   },
   hasValidURLParameters() {
-    const parameters = {};
-
     const href = window.location.href;
 
     const tempToken = href.match(/access_token=([^&]*)/);

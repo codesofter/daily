@@ -25,10 +25,14 @@
 
 .Track-information h3 {
   margin-bottom: .22rem;
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
 }
 
 .Track-information p {
   font-size: .83rem;
   font-weight: 300;
   color: rgba(256, 256, 256, 0.8);
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
 }
