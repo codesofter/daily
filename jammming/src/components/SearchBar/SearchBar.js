@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '../Button/Button';
 import './SearchBar.css';
 
 class SearchBar extends React.Component {
@@ -37,7 +38,7 @@ class SearchBar extends React.Component {
           placeholder="Enter A Song, Album, or Artist" 
           onChange={this.handleTermChange}
           onKeyDown={this.handleEnter} />
-        <a onClick={this.search}>SEARCH</a>
+        <Button success={this.props.success} handleClick={this.search} text={'SEARCH'} />
       </div>
     );
   }

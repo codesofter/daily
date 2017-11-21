@@ -10,9 +10,10 @@ class App extends Component {
     super(props);
 
     this.state = {
-      playlistName: 'Test Playlist',
+      playlistName: 'New Playlist',
       playlistTracks: [],
-      searchResults: []
+      searchResults: [],
+      buttonSuccess: true
     };
 
     this.addTrack = this.addTrack.bind(this);
@@ -20,6 +21,7 @@ class App extends Component {
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.updatePlaylistTracks = this.updatePlaylistTracks.bind(this);
     this.updateSearchResults = this.updateSearchResults.bind(this);
+    this.updateButtonSuccess = this.updateButtonSuccess.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
   }
@@ -54,6 +56,12 @@ class App extends Component {
     });
   }
 
+  updateButtonSuccess (success) {
+    this.setState({
+      buttonSuccess: success
+    })
+  }
+
   /*
       Track logic
   */
@@ -83,19 +91,25 @@ class App extends Component {
       */
       let trackURIs = this.state.playlistTracks.map(track => track.uri);
 
+      this.updateButtonSuccess(false);
       Spotify.savePlaylist(this.state.playlistName, trackURIs)
         .then(snapshot => {
           this.updatePlaylistName('New Playlist');
           this.updateSearchResults([]);
+          this.updateButtonSuccess(true);
         });
     }
   }
 
   search (term) {
-    Spotify.search(term)
-      .then(tracks => {
-        this.updateSearchResults(tracks);
-      });
+    if (term.length > 0) {
+      this.updateButtonSuccess(false);
+      Spotify.search(term)
+        .then(tracks => {
+          this.updateSearchResults(tracks);
+          this.updateButtonSuccess(true);
+        });
+    }
   }
 
   render () {
@@ -103,17 +117,20 @@ class App extends Component {
       <div>
         <h1>Ja<span className="highlight">mmm</span>ing</h1>
         <div className="App">
-          <SearchBar onSearch={this.search} />
+          <SearchBar
+            onSearch={this.search}
+            success={this.state.buttonSuccess} />
           <div className="App-playlist">
             <SearchResults
               searchResults={this.state.searchResults}
-              onAdd={this.addTrack} />
+              onAdd={this.addTrack}/>
             <Playlist
               name={this.state.playlistName}
               onNameChange={this.updatePlaylistName}
               onSave={this.savePlaylist}
               onRemove={this.removeTrack}
-              tracks={this.state.playlistTracks} />
+              tracks={this.state.playlistTracks}
+              success={this.state.buttonSuccess} />
           </div>
         </div>
       </div>
