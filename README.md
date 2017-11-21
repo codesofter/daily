@@ -1,5 +1,10 @@
 # daily
 
+
+## Notes for user:
+
+- Spotify authorization will make changes (create playlist/add tracks) to private playlists rather than public playlists. (Scopes were not specified in project directions.)
+
 ## FEATURES
 
 #### Below is a list of the website's features:
@@ -13,8 +18,7 @@
 - **Save Playlist to Account** — users can save their custom playlist by clicking a button called SAVE TO SPOTIFY.
 
 
-
-## QUESTIONS
+## SELF NOTES
 
 - What components does the application need?
 - How will the application handle state?
