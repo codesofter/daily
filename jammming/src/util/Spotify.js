@@ -60,13 +60,18 @@ const Spotify = {
       })).catch(error => console.log(error.message));
   },
   savePlaylist (title, uris) {
+    const headers = {
+      'Authorization': `Bearer ${this.getAccessToken()}`,
+      'Content-Type': 'application-json' 
+    };
+
     return this.getUserInformation()
       .then(user => {
         user_id = user.id;
-        this.postPlaylist(title)
+        this.postPlaylist(headers, title)
           .then(playlist => {
             playlist_id = playlist.id;
-            this.postTracks(title, uris);
+            this.postTracks(headers, title, uris);
           });
       });
   },
@@ -79,15 +84,11 @@ const Spotify = {
           throw Error(response.statusText);
         }
         return response.json();
-      }).then(user => {
-        return user;
-      }).catch(error => console.log(error.message));
+      })
+      .then(user => user)
+      .catch(error => console.log(error.message));
   },
-  postPlaylist (title) {
-    const headers = {
-      'Authorization': `Bearer ${this.getAccessToken()}`,
-      'Content-Type': 'application-json' 
-    };
+  postPlaylist (headers, title) {
     const body = JSON.stringify({
           'name': title,
           'public': false,
@@ -100,13 +101,11 @@ const Spotify = {
           throw Error(response.statusText);
         }
         return response.json();
-      }).then(playlist => playlist).catch(error => console.log(error.message));
+      })
+      .then(playlist => playlist)
+      .catch(error => console.log(error.message));
   },
-  postTracks (title, uris) {
-    const headers = {
-      'Authorization': `Bearer ${this.getAccessToken()}`,
-      'Content-Type': 'application-json' 
-    };
+  postTracks (headers, title, uris) {
     const body = JSON.stringify({
           uris: uris
         });
@@ -117,7 +116,8 @@ const Spotify = {
           throw Error(response.statusText);
         }
         return response.json();
-      }).then(tracks => tracks)
+      })
+      .then(tracks => tracks)
       .catch(error => console.log(error.message));
   },
   hasValidURLParameters () {
