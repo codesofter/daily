@@ -11,76 +11,70 @@ class App extends Component {
 
     this.state = {
       playlistName: 'Test Playlist',
-      playlistTracks: [{
-          id: 1,
-          name: 'rockstar (feat. 21 Savage)',
-          artist: 'Post Malone',
-          album: 'rockstar'
-        },{
-          id: 2,
-          name: 'Ghostface Killers',
-          artist: 'Without Warning',
-          album: '21 Savage, Offset & Metro Boomin'
-        },{
-          id: 3,
-          name: 'Havana (feat. Young Thug)',
-          artist: 'Camila Cabello',
-          album: 'Havana'
-        }],
-      searchResults: [{
-          id: 3,
-          name: 'Havana (feat. Young Thug)',
-          artist: 'Camila Cabello',
-          album: 'Havana'
-        },{
-          id: 4,
-          name: 'Birds of a Feather',
-          artist: 'Vulfpeck',
-          album: 'Mr Finish Line'
-        },{
-          id: 5,
-          name: 'Love Story (Feat. IU)',
-          artist: 'Epik High',
-          album: 'We\'ve Done Something Wonderful'
-        },{
-          id: 6,
-          name: 'Talking to You',
-          artist: 'Mt. Marcy',
-          album: 'Tied Together'
-        }]
+      playlistTracks: [],
+      searchResults: []
     };
 
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
+    this.updatePlaylistTracks = this.updatePlaylistTracks.bind(this);
+    this.updateSearchResults = this.updateSearchResults.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
   }
 
-  addTrack (track) {
-    if (!this.findTrack(track)) {
-      // push track onto playlistTracks (ES6)
-      // see https://stackoverflow.com/questions/37435334/correct-way-to-push-into-state-array
-      this.setState({ playlistTracks: [...this.state.playlistTracks, track] });
-    }
-  }
-
-  removeTrack (track) {
-    this.setState({
-      playlistTracks: this.state.playlistTracks.filter(playlistTrack => playlistTrack.id !== track.id)
-    });
-  }
-
+  /*
+      Methods to update state
+  */
   updatePlaylistName (name) {
     this.setState({
       playlistName: name
     });
   }
 
+  updatePlaylistTracks (type, track) {
+    if (type === 'add') {
+      // push track onto playlistTracks (ES6)
+      // see https://stackoverflow.com/questions/37435334/correct-way-to-push-into-state-array
+      this.setState({
+        playlistTracks: [...this.state.playlistTracks, track]
+      });
+    }
+    if (type === 'remove') {
+      this.setState({
+        playlistTracks: this.state.playlistTracks.filter(playlistTrack => playlistTrack.id !== track.id)
+      });
+    }
+  }
+
+  updateSearchResults (tracks) {
+    this.setState({
+      searchResults: tracks
+    });
+  }
+
+  /*
+      Track logic
+  */
+  addTrack (track) {
+    // Only add to playlist if there are no duplicates.
+    if (!this.findTrack(track)) {
+      this.updatePlaylistTracks('add', track);
+    }
+  }
+
+  removeTrack (track) {
+    this.updatePlaylistTracks('remove', track);
+  }
+
   findTrack (track) {
     return this.state.playlistTracks.some(playlistTrack => playlistTrack.id === track.id);
   }
 
+  /*
+      Playlist logic
+  */
   savePlaylist () {
     if (this.state.playlistName.length > 0) {
       /*
@@ -91,10 +85,8 @@ class App extends Component {
 
       Spotify.savePlaylist(this.state.playlistName, trackURIs)
         .then(snapshot => {
-          this.setState({
-            playlistName: 'New Playlist',
-            searchResults: []
-          });
+          this.updatePlaylistName('New Playlist');
+          this.updateSearchResults([]);
         });
     }
   }
@@ -102,9 +94,7 @@ class App extends Component {
   search (term) {
     Spotify.search(term)
       .then(tracks => {
-        this.setState({
-          searchResults: tracks
-        });
+        this.updateSearchResults(tracks);
       });
   }
 
