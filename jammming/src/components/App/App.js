@@ -13,7 +13,8 @@ class App extends Component {
       playlistName: 'New Playlist',
       playlistTracks: [],
       searchResults: [],
-      buttonSuccess: true
+      searchButtonLoading: false,
+      savePlaylistButtonLoading: false
     };
 
     this.addTrack = this.addTrack.bind(this);
@@ -21,7 +22,8 @@ class App extends Component {
     this.updatePlaylistName = this.updatePlaylistName.bind(this);
     this.updatePlaylistTracks = this.updatePlaylistTracks.bind(this);
     this.updateSearchResults = this.updateSearchResults.bind(this);
-    this.updateButtonSuccess = this.updateButtonSuccess.bind(this);
+    this.updateSearchButton = this.updateSearchButton.bind(this);
+    this.updateSavePlaylistButton = this.updateSavePlaylistButton.bind(this);
     this.savePlaylist = this.savePlaylist.bind(this);
     this.search = this.search.bind(this);
   }
@@ -42,8 +44,7 @@ class App extends Component {
       this.setState({
         playlistTracks: [...this.state.playlistTracks, track]
       });
-    }
-    if (type === 'remove') {
+    } else if (type === 'remove') {
       this.setState({
         playlistTracks: this.state.playlistTracks.filter(playlistTrack => playlistTrack.id !== track.id)
       });
@@ -56,10 +57,16 @@ class App extends Component {
     });
   }
 
-  updateButtonSuccess (success) {
+  updateSearchButton (isLoading) {
     this.setState({
-      buttonSuccess: success
-    })
+      searchButtonLoading: isLoading
+    });
+  }
+
+  updateSavePlaylistButton (isLoading) {
+    this.setState({
+      savePlaylistButtonLoading: isLoading
+    });
   }
 
   /*
@@ -91,23 +98,23 @@ class App extends Component {
       */
       let trackURIs = this.state.playlistTracks.map(track => track.uri);
 
-      this.updateButtonSuccess(false);
+      this.updateSavePlaylistButton(true);
       Spotify.savePlaylist(this.state.playlistName, trackURIs)
         .then(snapshot => {
           this.updatePlaylistName('New Playlist');
           this.updateSearchResults([]);
-          this.updateButtonSuccess(true);
+          this.updateSavePlaylistButton(false);
         });
     }
   }
 
   search (term) {
     if (term.length > 0) {
-      this.updateButtonSuccess(false);
+      this.updateSearchButton(true);
       Spotify.search(term)
         .then(tracks => {
           this.updateSearchResults(tracks);
-          this.updateButtonSuccess(true);
+          this.updateSearchButton(false);
         });
     }
   }
@@ -119,7 +126,7 @@ class App extends Component {
         <div className="App">
           <SearchBar
             onSearch={this.search}
-            success={this.state.buttonSuccess} />
+            loading={this.state.searchButtonLoading} />
           <div className="App-playlist">
             <SearchResults
               searchResults={this.state.searchResults}
@@ -130,7 +137,7 @@ class App extends Component {
               onSave={this.savePlaylist}
               onRemove={this.removeTrack}
               tracks={this.state.playlistTracks}
-              success={this.state.buttonSuccess} />
+              loading={this.state.savePlaylistButtonLoading} />
           </div>
         </div>
       </div>

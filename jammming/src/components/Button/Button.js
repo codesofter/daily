@@ -17,10 +17,10 @@ class Button extends React.Component {
   getCurrentButtonState () {
     const defaultClass = (this.props.classes || '') + ' ld-over-inverse';
 
-    if (this.props.success) {
-      return defaultClass;
-    } else {
+    if (this.props.loading) {
       return defaultClass + ' running';
+    } else {
+      return defaultClass;
     }
   }
 
