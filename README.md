@@ -4,6 +4,8 @@
 ## Notes for user:
 
 - Spotify authorization will make changes (create playlist/add tracks) to private playlists rather than public playlists. (Scopes were not specified in project directions.)
+- To build and run, please first add a Secret.js file in src/util for the Spotify API credentials, then `cd jammming` to run `npm run build`.
+- If you use `surge` to serve and use their randomly generated domain name, please edit Spotify.js for the correct redirect URI.
 
 ## FEATURES
 
