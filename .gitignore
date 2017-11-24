@@ -1,17 +1,15 @@
-.DS_STORE
+# dependencies
 node_modules
-*~
-*.pyc
-.grunt
-_SpecRunner.html
-__benchmarks__
-build/
-remote-repo/
-coverage/
+
+# testing
+coverage
 .module-cache
 fixtures/dom/public/react-dom.js
 fixtures/dom/public/react.js
 test/the-files-to-test.generated.js
+
+# production
+build
 *.log*
 chrome-user-data
 *.sublime-project
@@ -21,5 +19,18 @@ chrome-user-data
 .vscode
 *.swp
 *.swo
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*~
+*.pyc
+.grunt
+_SpecRunner.html
+__benchmarks__
+remote-repo/
 
 Secret.js
