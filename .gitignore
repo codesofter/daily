@@ -22,4 +22,4 @@ chrome-user-data
 *.swp
 *.swo
 
-jammming/src/util/Secret.js
+Secret.js

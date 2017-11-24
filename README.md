@@ -4,6 +4,7 @@
 ## Notes for user:
 
 - Spotify authorization will make changes (create playlist/add tracks) to private playlists rather than public playlists. (Scopes were not specified in project directions.)
+- To build and run, please first add a Secret.js file in src/util for the Spotify API credentials.
 
 ## FEATURES
 
